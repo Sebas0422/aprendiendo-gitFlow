@@ -3,8 +3,8 @@ import {
     Button,
     Card,
 } from "@palmetto/palmetto-components";
-import { UsuarioDTO } from "../dto/usuarioDto";
-import { useDeleteUsuario } from "../hooks/useUsuarios";
+import { UsuarioDTO } from "../../dto/usuarioDto";
+import { useDeleteUsuario } from "../../hooks/useUsuarios";
 
 interface UsuarioInfoProps {
     label: string;

@@ -1,7 +1,7 @@
 import { Box, Button, FormikTextInput } from '@palmetto/palmetto-components';
 import { Formik, Form, Field, FormikHelpers } from 'formik';
-import { UsuarioDTO } from '../dto/usuarioDto';
-import { useCreateUsuario } from '../hooks/useUsuarios';
+import { UsuarioDTO } from '../../dto/usuarioDto';
+import { useCreateUsuario } from '../../hooks/useUsuarios';
 
 type FormValues = {
     nombre: string;
