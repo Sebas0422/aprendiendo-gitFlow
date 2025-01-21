@@ -1,0 +1,15 @@
+.navBar{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #008433;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.navBar__item{
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}

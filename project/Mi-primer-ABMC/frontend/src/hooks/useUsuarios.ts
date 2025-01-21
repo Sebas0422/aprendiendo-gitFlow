@@ -41,7 +41,6 @@ export function useUsuariosSearch({ search }: { search: string }) {
             setError(null)
             prevSearch.current = search
             const newUsuarios = await getUsuarioSearch(search)
-            console.log(newUsuarios);
             if (newUsuarios.error) {
                 setUsuarios([])
                 setError(newUsuarios.error)

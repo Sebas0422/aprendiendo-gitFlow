@@ -18,7 +18,6 @@ export function useDebounce(value: string, delay: number): string {
 export function useDebouncedGetUsuarios(getUsuarios: (params: { search: string }) => void) {
     const debouncedGetUsuarios = useRef(
         debounce((search: string) => {
-            console.log("search", search);
             getUsuarios({ search });
         }, 1000)
     );

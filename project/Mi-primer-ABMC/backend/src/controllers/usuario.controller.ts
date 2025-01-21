@@ -12,7 +12,6 @@ export const getUsuarios = async (req: FastifyRequest, reply: FastifyReply) => {
 };
 
 export const getUsuarioSearch = async (req: FastifyRequest, reply: FastifyReply) => {
-
     try {
         const { search } = req.query as { search: string }
 
