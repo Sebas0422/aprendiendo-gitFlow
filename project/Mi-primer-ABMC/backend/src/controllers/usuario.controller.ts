@@ -2,17 +2,17 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import { Usuario } from '../models/Usuario'
 import { UsuarioDto } from '../dtos/usuarioDto'
 
-export async function getUsuarios(req: FastifyRequest, reply: FastifyReply) {
+export const getUsuarios = async (req: FastifyRequest, reply: FastifyReply) => {
     try {
         const usuarios = await Usuario.find()
         reply.send(usuarios)
     } catch (error) {
-        console.log(error)
-        reply.code(400).send({ error: 'Error al obtener usuarios' })
+        reply.code(400).send({ error: 'Error al obtener usuarios', message: error })
     }
 };
 
 export const getUsuarioSearch = async (req: FastifyRequest, reply: FastifyReply) => {
+
     try {
         const { search } = req.query as { search: string }
 
@@ -40,36 +40,10 @@ export const getUsuarioSearch = async (req: FastifyRequest, reply: FastifyReply)
 
         reply.status(200).send(usuarios)
     } catch (error) {
-        console.error(error)
-        reply.status(400).send({ error: "Error al buscar usuarios." })
+        reply.status(400).send({ error: "Error al buscar usuarios.", message: error })
     }
 };
-/*
-export const getUsuarioSearch = async (
-    req: FastifyRequest<{ Querystring: { search: string } }>,
-    reply: FastifyReply
-) => {
-    try {
-        const { search } = req.query
 
-        const usuarios = await Usuario.find({
-            $or: [
-                { nombre: { $regex: search, $options: 'i' } },
-                { apellido: { $regex: search, $options: 'i' } },
-            ],
-        })
-
-        if (usuarios.length === 0) {
-            return reply.send({ error: 'No se encontraron usuarios' })
-        }
-
-        return reply.send(usuarios)
-    } catch (error) {
-        console.error('Error al buscar usuario:', error)
-        return reply.code(500).send({ error: 'Error al obtener el usuario' })
-    }
-};
-*/
 export const createUsuario = async (req: FastifyRequest<{ Body: UsuarioDto }>, reply: FastifyReply) => {
     try {
         const { nombre, apellido, edad, telefono, correo } = req.body
@@ -87,7 +61,6 @@ export const createUsuario = async (req: FastifyRequest<{ Body: UsuarioDto }>, r
     }
 }
 
-
 export const getUsuario = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
     try {
         const usuario = await Usuario.findById(req.params.id)
@@ -97,8 +70,7 @@ export const getUsuario = async (req: FastifyRequest<{ Params: { id: string } }>
             reply.send(usuario)
         }
     } catch (error) {
-        console.log(error)
-        reply.code(400).send({ error: 'Error al obtener el usuario' })
+        reply.code(400).send({ error: 'Error al obtener el usuario', message: error })
     }
 };
 
@@ -114,7 +86,7 @@ export const updateUsuario = async (req: FastifyRequest<{ Body: UsuarioDto, Para
         })
         reply.code(201).send({ message: 'Usuario actualizado', Usuario: req.body })
     } catch (error) {
-        console.log(error)
+        reply.code(400).send({ error: 'Error al actualizar usuario', message: error })
     }
 
 }
@@ -124,6 +96,6 @@ export const deleteUsuario = async (req: FastifyRequest<{ Params: { id: string }
         await Usuario.findByIdAndDelete(req.params.id)
         reply.code(204).send({ message: 'Usuario eliminado' })
     } catch (error) {
-        console.log(error)
+        reply.code(400).send({ error: 'Error al eliminar usuario', message: error })
     }
 }
