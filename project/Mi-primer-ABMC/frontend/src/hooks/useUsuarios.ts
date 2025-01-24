@@ -30,10 +30,6 @@ export function useUsuariosSearch({ search }: { search: string }) {
     const [, setError] = useState<string | null>(null);
     const prevSearch = useRef(search);
 
-    const removeUsuarioLocal = useCallback((usuarioId: string) => {
-        setUsuarios((prevUsuarios) => prevUsuarios.filter((usuario) => usuario.id !== usuarioId));
-    }, []);
-
     const getUsuarios = useCallback(async ({ search }: { search: string }) => {
         if (search === prevSearch.current) return
         try {
@@ -59,7 +55,7 @@ export function useUsuariosSearch({ search }: { search: string }) {
 
         return [...usuarios].sort((a, b) => a.nombre.localeCompare(b.nombre))
     }, [usuarios])
-    return { usuarios: sortedUsuarios, getUsuarios, loading, removeUsuarioLocal };
+    return { usuarios: sortedUsuarios, getUsuarios, loading };
 }
 
 export function useCreateUsuario() {

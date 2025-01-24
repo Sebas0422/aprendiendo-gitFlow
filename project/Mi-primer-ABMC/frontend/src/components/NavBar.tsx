@@ -1,12 +1,22 @@
-import '../css/navBar.css'
 import { Link } from "react-router-dom"
 
 function NavBar() {
     return (
-        <nav className='navBar'>
-            <Link to="/" className='navBar__item'>Usuarios</Link>
-            <Link to="/cuentas" className='navBar__item'>Cuentas</Link>
+        <nav className="bg-green-600 p-4 mb-4 ">
+            <Link
+                to="/"
+                className="text-black-700 font-bold mx-4 hover:text-white"
+            >
+                Usuarios
+            </Link>
+            <Link
+                to="/cuentas"
+                className="text-black-700 font-bold mx-4 hover:text-white"
+            >
+                Cuentas
+            </Link>
         </nav>
+
     )
 }
 
