@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react"
-import { CuentaDTO } from "../dto/cuentaDto"
+import { CuentaDTO } from "../types/Account"
 import { deleteCuenta, getCuentasSearch } from "../services/cuenta"
 
 export const useCuentasSearch = ({ search }: { search: string }) => {

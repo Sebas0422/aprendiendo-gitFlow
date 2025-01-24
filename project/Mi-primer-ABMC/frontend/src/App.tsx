@@ -1,6 +1,6 @@
-import NavBar from './components/NavBar';
+import NavBar from './components/Shared/NavBar';
 import { Route, Routes } from 'react-router-dom';
-import Usuario from './components/Usuario/Usuario';
+import Usuario from './components/User/Usuario';
 import Cuenta from './components/Cuenta/Cuenta';
 
 export default function App() {

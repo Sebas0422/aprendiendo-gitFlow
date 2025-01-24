@@ -1,6 +1,6 @@
 import { useOpenClose, Modal, Button } from "@palmetto/palmetto-components"
-import UsuarioForm from "./UsuarioForm"
-import { UsuarioDTO } from "../../dto/usuarioDto";
+import UsuarioForm from "./UserForm"
+import { UsuarioDTO } from "../../types/User";
 
 const usuario: UsuarioDTO = {
     id: "",

@@ -3,7 +3,7 @@ import {
     Button,
     Card
 } from '@palmetto/palmetto-components';
-import { CuentaDTO } from '../../dto/cuentaDto';
+import { CuentaDTO } from '../../types/Account';
 import { useDeleteCuenta } from '../../hooks/useCuentas';
 
 interface CuentaInfoProps {

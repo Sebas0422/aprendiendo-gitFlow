@@ -3,6 +3,6 @@ export interface StateUsuarios {
 }
 
 export type Action =
-    | { type: 'add', usuario: UsuarioDTO }
-    | { type: 'remove', id: string }
-    | { type: 'update', usuario: UsuarioDTO }
+    | { type: "users/addUser"; payload: UsuarioDTO }
+    | { type: "users/deleteUser"; payload: string }
+    | { type: "users/updateUser"; payload: UsuarioDTO };

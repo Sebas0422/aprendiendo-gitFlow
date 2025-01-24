@@ -1,4 +1,4 @@
-import { CuentaDTO } from '../dto/cuentaDto';
+import { CuentaDTO } from '../types/Account';
 
 const API_URL: string = `${import.meta.env.VITE_BASE_URL}/api/cuentas`;
 export const getCuentasSearch = async (search: string) => {

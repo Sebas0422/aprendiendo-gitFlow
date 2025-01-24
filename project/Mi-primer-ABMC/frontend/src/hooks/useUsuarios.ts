@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { UsuarioDTO } from '../dto/usuarioDto';
+import { UsuarioDTO } from '../types/User';
 import { getUsuarios, getUsuarioSearch, createUsuario, deleteUsuario } from '../services/user';
 
 export function useUsuarios() {
