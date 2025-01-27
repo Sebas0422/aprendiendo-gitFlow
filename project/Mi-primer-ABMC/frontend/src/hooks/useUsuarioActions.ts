@@ -1,8 +1,10 @@
-import { setUsers as setUsersAction, addUser, deleteUserById, updateUser } from "../features/users/slice";
+import { useEffect } from "react";
+import { setUsers as setUsersAction, addUser, deleteUserById, updateUser, getUsersList } from "../features/users/slice";
 import { UsuarioDTO } from "../types/User";
-import { useAppDispacth } from "./store";
+import { useAppDispacth, useAppSelector } from "./store";
 
 export const useUserActions = () => {
+    const { list: users, loading } = useAppSelector((state) => state.users);
     const dispatch = useAppDispacth();
 
     const setUsers = (users: UsuarioDTO[]) => {
@@ -23,5 +25,12 @@ export const useUserActions = () => {
     const updateExistingUser = (user: UsuarioDTO) => {
         dispatch(updateUser(user));
     }
+
+    useEffect(() => {
+        if (!users.length && !loading) {
+            dispatch(getUsersList());
+        }
+    }, [dispatch, users.length, loading]);
+
     return { setUsers, addNewUser, deleteExistingUser, updateExistingUser };
 };

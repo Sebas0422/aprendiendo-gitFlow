@@ -2,20 +2,16 @@ import { RootState } from "../..";
 import { createUsuario, deleteUsuario } from "../../../services/user";
 import { rollbackUser } from "../../../features/users/slice";
 import { Middleware } from "@reduxjs/toolkit";
+import { Action, ActionTypesUser } from "../../../types.d";
 
-enum ActionTypes {
-    ADD_USER = "users/addUser",
-    UPDATE_USER = "users/updateUser",
-    DELETE_USER = "users/deleteUser",
-    SET_USERS = "users/setUsers"
-}
+export const useSyncMiddleware: Middleware = store => next => (action) => {
+    if (!isMyAction(action)) return next(action);
 
-export const useSyncMiddleware: Middleware = store => next => (action: Any) => {
     const { type } = action;
     const previousState = store.getState() as RootState;
 
     next(action);
-    if (type === ActionTypes.ADD_USER) {
+    if (type === ActionTypesUser.ADD_USER) {
         const newUser = action.payload;
         const usersToNew = previousState.users;
         createUsuario(newUser).catch((error) => {
@@ -24,7 +20,7 @@ export const useSyncMiddleware: Middleware = store => next => (action: Any) => {
         });
     }
 
-    if (type === ActionTypes.DELETE_USER) {
+    if (type === ActionTypesUser.DELETE_USER) {
         const id = action.payload;
         const usersToDelete = previousState.users;
         deleteUsuario(id).catch((error) => {
@@ -32,4 +28,13 @@ export const useSyncMiddleware: Middleware = store => next => (action: Any) => {
             throw error;
         });
     }
+}
+
+function isMyAction(action: unknown): action is Action {
+    return (
+        typeof action === "object" &&
+        action !== null &&
+        "type" in action &&
+        Object.values(ActionTypesUser).includes((action as Action).type)
+    );
 }

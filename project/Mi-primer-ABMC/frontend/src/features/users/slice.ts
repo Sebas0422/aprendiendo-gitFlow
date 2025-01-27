@@ -1,30 +1,65 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { UsuarioDTO } from "../../types/User";
+import { getUsuarios } from "../../services/user";
 
-const initialState: UsuarioDTO[] = [];
+interface UserState {
+    list: UsuarioDTO[];
+    loading: boolean;
+    error: string | null;
+}
+
+const initialState: UserState = {
+    list: [],
+    loading: false,
+    error: null,
+};
+
+export const getUsersList = createAsyncThunk("users/getUsersList", () => {
+    return getUsuarios();
+})
+
 export const userSlice = createSlice({
     name: "users",
     initialState,
     reducers: {
         addUser: (state, action: PayloadAction<UsuarioDTO>) => {
-            state.push(action.payload);
+            state.list.push(action.payload);
         },
         updateUser: (state, action: PayloadAction<UsuarioDTO>) => {
-            const index = state.findIndex((user) => user.id === action.payload.id);
+            const index = state.list.findIndex((user) => user.id === action.payload.id);
             if (index !== -1) {
-                state[index] = action.payload;
+                state.list[index] = action.payload;
             }
         },
         deleteUserById: (state, action: PayloadAction<string>) => {
             const id = action.payload;
-            return state.filter(user => user.id !== id)
+            const index = state.list.findIndex((user) => user.id === id);
+            if (index !== -1) {
+                state.list.splice(index, 1);
+            }
         },
-        setUsers: (_, action: PayloadAction<UsuarioDTO[]>) => {
-            return action.payload;
+        setUsers: (state, action: PayloadAction<UsuarioDTO[]>) => {
+            state.list = action.payload;
         },
-        rollbackUser: (state, action: PayloadAction<UsuarioDTO>) => {
-            return state.filter(user => user.id !== action.payload.id);
+        rollbackUser: (state, action: PayloadAction<UsuarioDTO | string>) => {
+            const id = typeof action.payload === "string" ? action.payload : action.payload.id;
+            state.list = state.list.filter(user => user.id !== id);
         }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(getUsersList.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getUsersList.fulfilled, (state, action: PayloadAction<UsuarioDTO[]>) => {
+                state.list = action.payload;
+                state.loading = false;
+            })
+            .addCase(getUsersList.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || "Failed to fetch users";
+            });
     }
 });
 
