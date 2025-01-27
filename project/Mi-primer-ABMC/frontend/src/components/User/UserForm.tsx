@@ -1,7 +1,7 @@
 import { Box, Button, FormikTextInput } from '@palmetto/palmetto-components';
 import { Formik, Form, Field, FormikHelpers } from 'formik';
 import { UsuarioDTO } from '../../types/User';
-import { useCreateUsuario } from '../../hooks/useUsuarios';
+import { useUserActions } from '../../hooks/useUsuarioActions';
 
 type FormValues = {
     nombre: string;
@@ -33,8 +33,7 @@ const validateForm = (values: FormValues): Partial<FormValues> => {
 };
 
 export default function UsuarioForm({ usuario }: UserFormProps) {
-    const { create } = useCreateUsuario();
-
+    const { addNewUser } = useUserActions();
     const initialFormValues: FormValues = {
         nombre: usuario.nombre,
         apellido: usuario.apellido,
@@ -43,7 +42,7 @@ export default function UsuarioForm({ usuario }: UserFormProps) {
         telefono: usuario.telefono,
     };
 
-    const handleSubmit = async (
+    const handleSubmit = (
         values: FormValues,
         { setSubmitting, resetForm }: FormikHelpers<FormValues>
     ) => {
@@ -59,7 +58,7 @@ export default function UsuarioForm({ usuario }: UserFormProps) {
         };
 
         try {
-            await create(newUsuario);
+            addNewUser(newUsuario);
             resetForm();
         } catch (error) {
             if (error instanceof Error) throw new Error(error.message);
