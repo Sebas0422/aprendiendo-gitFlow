@@ -1,12 +1,12 @@
 import { Box, TextInput } from '@palmetto/palmetto-components';
 import { useSearch } from '../../hooks/useSearch';
 import { useCuentasSearch } from '../../hooks/useCuentas';
-import { useDebouncedGetUsuarios } from '../../hooks/useDebounce';
+import { useDebounce } from '../../hooks/useDebounce';
 import CuentaCard from './CuentaCard';
 export default function Cuenta() {
     const { search, updateSearch } = useSearch()
     const { cuentas, getCuentas, removeCuentaLocal } = useCuentasSearch({ search })
-    const debouncedGetUsuarios = useDebouncedGetUsuarios(getCuentas)
+    const debouncedGetUsuarios = useDebounce(getCuentas)
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newSearch = event.target.value
         updateSearch(newSearch)

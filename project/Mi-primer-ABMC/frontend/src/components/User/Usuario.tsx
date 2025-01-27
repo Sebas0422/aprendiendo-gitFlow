@@ -1,38 +1,25 @@
-import { Box, TextInput } from "@palmetto/palmetto-components";
-import UsuarioCreate from "./UsuarioCreate";
-import UsuarioCard from "./UsuarioCard";
 import { useSearch } from "../../hooks/useSearch";
-import { useDebouncedGetUsuarios } from "../../hooks/useDebounce";
+import { useDebounce } from "../../hooks/useDebounce";
 import { useAppSelector } from "../../hooks/store";
-import { getUsuarios } from "../../services/user";
 import { useUserActions } from "../../hooks/useUsuarioActions";
+import UsuarioHeader from "./UserHeader";
+import UsuarioList from "./UserList";
 
 export default function Usuario() {
     const { list: users, loading } = useAppSelector((state) => state.users);
-    useUserActions();
-    const { search, updateSearch } = useSearch()
-    const debouncedGetUsuarios = useDebouncedGetUsuarios(getUsuarios);
+    const { getUsersListSearchs } = useUserActions();
+    const { search, updateSearch } = useSearch();
+    const debouncedGetUsuarios = useDebounce(getUsersListSearchs);
 
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newSearch = event.target.value
-        updateSearch(newSearch)
-        debouncedGetUsuarios(newSearch)
-    }
+    const handleSearchChange = (newSearch: string) => {
+        updateSearch(newSearch);
+        debouncedGetUsuarios(newSearch);
+    };
 
     return (
         <>
-            <Box gap="lg" direction="row" wrap>
-                <TextInput
-                    id="user-search"
-                    value={search}
-                    label="Buscar usuario"
-                    onChange={handleChange}
-                    autoFocus
-                />
-                <UsuarioCreate />
-            </Box>
-            {loading ? <p>Cargando...</p> : <UsuarioCard usuarios={users} />}
+            <UsuarioHeader search={search} onSearchChange={handleSearchChange} />
+            <UsuarioList usuarios={users} loading={loading} />
         </>
-    )
+    );
 }

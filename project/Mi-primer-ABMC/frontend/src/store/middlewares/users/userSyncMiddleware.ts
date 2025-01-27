@@ -14,18 +14,16 @@ export const useSyncMiddleware: Middleware = store => next => (action) => {
     if (type === ActionTypesUser.ADD_USER) {
         const newUser = action.payload;
         const usersToNew = previousState.users;
-        createUsuario(newUser).catch((error) => {
+        createUsuario(newUser).catch(() => {
             if (usersToNew) store.dispatch(rollbackUser(newUser));
-            throw error;
         });
     }
 
     if (type === ActionTypesUser.DELETE_USER) {
         const id = action.payload;
         const usersToDelete = previousState.users;
-        deleteUsuario(id).catch((error) => {
+        deleteUsuario(id).catch(() => {
             if (usersToDelete) store.dispatch(rollbackUser(id));
-            throw error;
         });
     }
 }

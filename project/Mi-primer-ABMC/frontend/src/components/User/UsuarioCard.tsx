@@ -1,26 +1,8 @@
-import {
-    Box,
-    Button,
-    Card,
-} from "@palmetto/palmetto-components";
+import { Box, Card } from "@palmetto/palmetto-components";
+import UsuarioInfo from "./UsuarioInfo";
+import CardFooter from "./CardFooter";
 import { UsuarioDTO } from "../../types/User";
 import { useUserActions } from "../../hooks/useUsuarioActions";
-
-interface UsuarioInfoProps {
-    label: string;
-    value: string | number | undefined;
-}
-
-function UsuarioInfo({ label, value }: UsuarioInfoProps) {
-    return (
-        <Box gap="2xs">
-            <Box fontSize="sm" color="black">
-                {label}
-            </Box>
-            <Box>{value ?? "No disponible"}</Box>
-        </Box>
-    );
-}
 
 interface UsuarioCardProps {
     usuarios?: UsuarioDTO[];
@@ -54,29 +36,26 @@ export default function UsuarioCard({ usuarios = [] }: UsuarioCardProps) {
                         <Card.Section title="Perfil">
                             <Box direction="column" gap="lg">
                                 <Box flex="auto" gap="lg">
-                                    <UsuarioInfo label="Nombre Completo" value={`${usuario.nombre} ${usuario.apellido}`} />
+                                    <UsuarioInfo
+                                        label="Nombre Completo"
+                                        value={`${usuario.nombre} ${usuario.apellido}`}
+                                    />
                                     <UsuarioInfo label="Teléfono" value={usuario.telefono} />
                                 </Box>
                                 <Box flex="auto" gap="lg">
                                     <UsuarioInfo label="Correo" value={usuario.correo} />
-                                    <UsuarioInfo label="Edad" value={usuario.edad ? `${usuario.edad} años` : undefined} />
+                                    <UsuarioInfo
+                                        label="Edad"
+                                        value={usuario.edad ? `${usuario.edad} años` : undefined}
+                                    />
                                 </Box>
                             </Box>
                         </Card.Section>
                         <Card.Footer>
-                            <Box display="flex" direction="row" justify="between" gap="md">
-                                <Button size="sm" variant="secondary" tone="neutral">
-                                    Editar
-                                </Button>
-                                <Button
-                                    onClick={() => handleRemove(usuario.id)}
-                                    variant="secondary"
-                                    tone="danger"
-                                    size="sm"
-                                >
-                                    Eliminar
-                                </Button>
-                            </Box>
+                            <CardFooter
+                                onEdit={() => console.log("Editar")}
+                                onDelete={() => handleRemove(usuario.id)}
+                            />
                         </Card.Footer>
                     </Card>
                 </Box>

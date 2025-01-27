@@ -1,11 +1,15 @@
 import { useEffect } from "react";
-import { setUsers as setUsersAction, addUser, deleteUserById, updateUser, getUsersList } from "../features/users/slice";
+import { setUsers as setUsersAction, addUser, deleteUserById, updateUser, getUsersList, getUsersListSearch } from "../features/users/slice";
 import { UsuarioDTO } from "../types/User";
 import { useAppDispacth, useAppSelector } from "./store";
 
 export const useUserActions = () => {
-    const { list: users, loading } = useAppSelector((state) => state.users);
     const dispatch = useAppDispacth();
+    const { isLoaded } = useAppSelector((state) => state.users);
+
+    const getUsersListSearchs = ({ search }: { search: string }) => {
+        dispatch(getUsersListSearch(search));
+    }
 
     const setUsers = (users: UsuarioDTO[]) => {
         if (users.length === 0) {
@@ -27,10 +31,11 @@ export const useUserActions = () => {
     }
 
     useEffect(() => {
-        if (!users.length && !loading) {
+        if (!isLoaded) {
+            console.log('useEffect getUsersList');
             dispatch(getUsersList());
         }
-    }, [dispatch, users.length, loading]);
+    }, [dispatch, isLoaded]);
 
-    return { setUsers, addNewUser, deleteExistingUser, updateExistingUser };
+    return { getUsersListSearchs, setUsers, addNewUser, deleteExistingUser, updateExistingUser, getUsersListSearch };
 };

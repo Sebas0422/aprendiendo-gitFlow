@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import debounce from 'just-debounce-it'
 
-export function useDebounce(value: string, delay: number): string {
+export function useDebouncet(value: string, delay: number): string {
     const [debouncedValue, setDebouncedValue] = useState(value)
 
     useEffect(() => {
@@ -15,19 +15,17 @@ export function useDebounce(value: string, delay: number): string {
     return debouncedValue
 }
 
-export function useDebouncedGetUsuarios(getUsuarios: (params: { search: string }) => void) {
+export function useDebounce(getListSearch: (params: { search: string }) => void) {
     const debouncedGetUsuarios = useRef(
-        debounce((search: string) => {
-            getUsuarios({ search });
+        debounce((params: { search: string }) => {
+            getListSearch(params);
         }, 1000)
     );
 
     const debouncedCallback = useCallback(
-        (search: string) => {
-            debouncedGetUsuarios.current(search);
-        },
-        []
-    );
+        (search: string = "") => {
+            debouncedGetUsuarios.current({ search });
+        }, []);
 
     return debouncedCallback;
 };
