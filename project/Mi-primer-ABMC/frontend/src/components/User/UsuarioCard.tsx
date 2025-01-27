@@ -3,8 +3,8 @@ import {
     Button,
     Card,
 } from "@palmetto/palmetto-components";
-import { UsuarioDTO } from "../dto/usuarioDto";
-import { useDeleteUsuario } from "../hooks/useUsuarios";
+import { UsuarioDTO } from "../../types/User";
+import { useUserActions } from "../../hooks/useUsuarioActions";
 
 interface UsuarioInfoProps {
     label: string;
@@ -24,15 +24,13 @@ function UsuarioInfo({ label, value }: UsuarioInfoProps) {
 
 interface UsuarioCardProps {
     usuarios?: UsuarioDTO[];
-    onRemoveUsuario: (id: string) => void;
 }
 
-export default function UsuarioCard({ usuarios = [], onRemoveUsuario }: UsuarioCardProps) {
-    const { remove } = useDeleteUsuario();
+export default function UsuarioCard({ usuarios = [] }: UsuarioCardProps) {
+    const { deleteExistingUser } = useUserActions();
 
     const handleRemove = (id: string) => {
-        remove(id);
-        onRemoveUsuario(id);
+        deleteExistingUser(id);
     };
 
     if (usuarios.length === 0) {
