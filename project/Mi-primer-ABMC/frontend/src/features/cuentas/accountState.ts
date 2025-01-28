@@ -12,22 +12,7 @@ interface AccountState {
 }
 
 const accountState = proxy<AccountState>({
-    list: [
-        {
-            id: "1",
-            nombre: "Cuenta 1",
-            cuenta: "123456789",
-            monto: 1000,
-            usuarioId: "1",
-        },
-        {
-            id: "2",
-            nombre: "Cuenta 2",
-            cuenta: "987654321",
-            monto: 2000,
-            usuarioId: "2",
-        },
-    ],
+    list: [],
     filter: "",
     addAccount(newCuenta) {
         accountState.list = [...accountState.list, newCuenta];
