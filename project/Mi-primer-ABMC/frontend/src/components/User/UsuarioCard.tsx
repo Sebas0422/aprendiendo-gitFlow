@@ -24,7 +24,7 @@ export default function UsuarioCard({ usuarios = [] }: UsuarioCardProps) {
     }
 
     return (
-        <Box gap="lg" padding="lg" direction="row" wrap maxWidth="6x1">
+        <Box gap="lg" padding="lg" direction="row" wrap maxWidth="6x1" key={"usuario-card"}>
             {usuarios.map((usuario) => (
                 <Box key={usuario.id} background="primary-300">
                     <Card>

@@ -23,7 +23,7 @@ export function useDebounce(getListSearch: (params: { search: string }) => void)
     );
 
     const debouncedCallback = useCallback(
-        (search: string = "") => {
+        (search: string = "search") => {
             debouncedGetUsuarios.current({ search });
         }, []);
 

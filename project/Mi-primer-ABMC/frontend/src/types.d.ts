@@ -13,3 +13,5 @@ export type Action =
     | { type: ActionTypesUser.ADD_USER; payload: UsuarioDTO }
     | { type: ActionTypesUser.DELETE_USER; payload: string }
     | { type: ActionTypesUser.UPDATE_USER; payload: UsuarioDTO };
+
+

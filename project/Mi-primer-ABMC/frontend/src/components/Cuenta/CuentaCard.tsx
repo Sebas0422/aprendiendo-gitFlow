@@ -3,8 +3,8 @@ import {
     Button,
     Card
 } from '@palmetto/palmetto-components';
-import { CuentaDTO } from '../../types/Account';
-import { useDeleteCuenta } from '../../hooks/useCuentas';
+import { CuentaDTO, CuentaId } from '../../types/Account';
+import { useRemoveAccount } from '../../hooks/useCuentas';
 
 interface CuentaInfoProps {
     label: string;
@@ -12,8 +12,8 @@ interface CuentaInfoProps {
 }
 
 interface CuentaCardProps {
-    cuentas?: CuentaDTO[];
-    onRemoveCuenta: (id: string) => void;
+    cuentas?: ReadonlyArray<CuentaDTO>;
+    onRemoveCuenta: (id: CuentaId) => void;
 }
 
 const CuentaInfo = ({ label, value }: CuentaInfoProps) => {
@@ -28,10 +28,10 @@ const CuentaInfo = ({ label, value }: CuentaInfoProps) => {
 }
 
 const CuentaCard = ({ cuentas = [], onRemoveCuenta }: CuentaCardProps) => {
-    const { remove } = useDeleteCuenta();
+    const { removeAccount } = useRemoveAccount();
 
     const handleRemove = (id: string) => {
-        remove(id);
+        removeAccount(id);
         onRemoveCuenta(id);
     };
 

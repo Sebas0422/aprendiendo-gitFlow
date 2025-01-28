@@ -1,5 +1,7 @@
+export type CuentaId = string;
 export interface CuentaDTO {
-    id: string;
+    _id?: CuentaId;
+    id: CuentaId;
     cuenta: string;
     nombre: string;
     monto: number;

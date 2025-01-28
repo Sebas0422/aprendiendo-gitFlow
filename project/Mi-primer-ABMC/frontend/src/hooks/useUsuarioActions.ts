@@ -32,7 +32,6 @@ export const useUserActions = () => {
 
     useEffect(() => {
         if (!isLoaded) {
-            console.log('useEffect getUsersList');
             dispatch(getUsersList());
         }
     }, [dispatch, isLoaded]);

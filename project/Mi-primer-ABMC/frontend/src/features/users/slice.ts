@@ -17,7 +17,6 @@ const initialState: UserState = {
 };
 
 export const getUsersList = createAsyncThunk("users/getUsersList", () => {
-    console.log('getUsersList');
     return getUsuarios();
 })
 
@@ -60,7 +59,6 @@ export const userSlice = createSlice({
                 state.error = null;
             })
             .addCase(getUsersList.fulfilled, (state, action: PayloadAction<UsuarioDTO[]>) => {
-                console.log('getUsersList.fulfilled');
                 state.list = action.payload;
                 state.loading = false;
                 state.isLoaded = true
