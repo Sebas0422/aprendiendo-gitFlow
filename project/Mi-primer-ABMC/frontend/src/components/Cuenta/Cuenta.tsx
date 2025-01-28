@@ -1,18 +1,25 @@
 import { Box, TextInput } from '@palmetto/palmetto-components';
 import { useSearch } from '../../hooks/useSearch';
-import { useCuentasSearch } from '../../hooks/useCuentas';
-import { useDebouncedGetUsuarios } from '../../hooks/useDebounce';
+import { useDebounce } from '../../hooks/useDebounce';
+import accountState from '../../features/cuentas/accountState';
+import { useSnapshot } from 'valtio';
+import { useAccountBySearch } from '../../hooks/useCuentas';
 import CuentaCard from './CuentaCard';
+
 export default function Cuenta() {
+    const snap = useSnapshot(accountState)
+    const { getAccount } = useAccountBySearch()
     const { search, updateSearch } = useSearch()
-    const { cuentas, getCuentas, removeCuentaLocal } = useCuentasSearch({ search })
-    const debouncedGetUsuarios = useDebouncedGetUsuarios(getCuentas)
+    const debouncedGetUsuarios = useDebounce(getAccount)
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newSearch = event.target.value
         updateSearch(newSearch)
         debouncedGetUsuarios(newSearch)
     }
-
+    const filteredAccount = snap.filter
+        ? snap.list.filter((cuenta) => {
+            return cuenta.nombre.toLowerCase().includes(search.toLowerCase());
+        }) : snap.list;
     return (
         <>
             <Box gap="lg" direction="row" wrap>
@@ -24,7 +31,7 @@ export default function Cuenta() {
                     autoFocus
                 />
             </Box>
-            <CuentaCard cuentas={cuentas} onRemoveCuenta={removeCuentaLocal} />
+            <CuentaCard cuentas={filteredAccount} onRemoveCuenta={snap.deleteAccount} />
         </>
     )
 }

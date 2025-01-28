@@ -14,8 +14,7 @@ export const getUsuarios = async (req: FastifyRequest, reply: FastifyReply) => {
 export const getUsuarioSearch = async (req: FastifyRequest, reply: FastifyReply) => {
     try {
         const { search } = req.query as { search: string }
-
-        if (!search) {
+        if (search === undefined) {
             return reply.status(400).send({ error: "El parámetro 'search' es requerido." })
         }
 
@@ -39,7 +38,9 @@ export const getUsuarioSearch = async (req: FastifyRequest, reply: FastifyReply)
 
         reply.status(200).send(usuarios)
     } catch (error) {
-        reply.status(400).send({ error: "Error al buscar usuarios.", message: error })
+        if (error instanceof Error) {
+            reply.status(400).send({ error: "Error al buscar usuarios.", message: error.message })
+        }
     }
 };
 

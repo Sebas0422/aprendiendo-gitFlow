@@ -1,22 +1,28 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { UsuarioDTO } from "../../types/User";
-import { getUsuarios } from "../../services/user";
+import { getUsuarios, getUsuarioSearch } from "../../services/user";
 
 interface UserState {
     list: UsuarioDTO[];
     loading: boolean;
     error: string | null;
+    isLoaded: boolean
 }
 
 const initialState: UserState = {
     list: [],
     loading: false,
     error: null,
+    isLoaded: false
 };
 
 export const getUsersList = createAsyncThunk("users/getUsersList", () => {
     return getUsuarios();
 })
+
+export const getUsersListSearch = createAsyncThunk("users/getUsersListSearch", (search: string) => {
+    return getUsuarioSearch(search);
+});
 
 export const userSlice = createSlice({
     name: "users",
@@ -55,8 +61,21 @@ export const userSlice = createSlice({
             .addCase(getUsersList.fulfilled, (state, action: PayloadAction<UsuarioDTO[]>) => {
                 state.list = action.payload;
                 state.loading = false;
+                state.isLoaded = true
             })
             .addCase(getUsersList.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || "Failed to fetch users";
+            })
+            .addCase(getUsersListSearch.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getUsersListSearch.fulfilled, (state, action: PayloadAction<UsuarioDTO[]>) => {
+                state.list = action.payload;
+                state.loading = false;
+            })
+            .addCase(getUsersListSearch.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || "Failed to fetch users";
             });

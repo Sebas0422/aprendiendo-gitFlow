@@ -1,66 +1,57 @@
-import { useCallback, useMemo, useRef, useState } from "react"
-import { CuentaDTO } from "../types/Account"
-import { deleteCuenta, getCuentasSearch } from "../services/cuenta"
+import { getCuentasSearch, getCuentas, deleteCuenta } from "../services/cuenta";
+import { CuentaDTO } from "../types/Account";
+import accountState from '../features/cuentas/accountState';
+import { useCallback, useMemo, useState } from "react";
 
-export const useCuentasSearch = ({ search }: { search: string }) => {
-    const [cuentas, setCuentas] = useState<CuentaDTO[]>([])
-    const [loading, setLoading] = useState<boolean>(false)
-    const [error, setError] = useState<string | null>(null)
-
-    const prevSearch = useRef(search)
-
-    const removeCuentaLocal = useCallback((cuentaId: string) => {
-        setCuentas((prevCuentas) => prevCuentas.filter((cuenta) => cuenta.id! === cuentaId))
-    }, [])
-
-    const getCuentas = useCallback(async ({ search }: { search: string }) => {
-        if (search === prevSearch.current) return
+export const useAccountBySearch = () => {
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const { setList } = accountState;
+    const getAccount = useCallback(async ({ search }: { search: string }) => {
         try {
-            setLoading(true)
-            setError(null)
-            prevSearch.current = search
-            const newCuentas = await getCuentasSearch(search)
-            if (newCuentas.error) {
-                setCuentas([])
-                setError(newCuentas.error)
-                return
+            setLoading(true);
+            setError(null);
+            let cuentas: CuentaDTO[] = [];
+            if (search === "") {
+                cuentas = await getCuentas();
+            } else {
+                cuentas = await getCuentasSearch(search);
             }
-            setCuentas(newCuentas)
+            setList(cuentas);
         }
         catch (error) {
-            setError(error instanceof Error ? error.message : 'Error desconocido')
+            if (error instanceof Error) setError("Error al obtener las cuentas");
         }
         finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }, [])
+    }, [setList])
 
-    const sortedCuenta = useMemo(() => {
-        if (cuentas.length === 0) return cuentas
+    const sortedAccount = useMemo(() => {
+        return accountState.list.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    }, []);
 
-        return [...cuentas].sort((a, b) => a.nombre.localeCompare(b.nombre))
-    }, [cuentas])
+    return { accounts: sortedAccount, getAccount, loading, error };
+};
 
-    return { cuentas: sortedCuenta, loading, error, removeCuentaLocal, getCuentas }
-}
-
-export const useDeleteCuenta = () => {
-    const [loading, setLoading] = useState<boolean>(false)
-    const [error, setError] = useState<string | null>(null)
-
-    const remove = useCallback(async (id: string) => {
+export const useRemoveAccount = () => {
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const { deleteAccount } = accountState;
+    const removeAccount = useCallback(async (id: string) => {
         try {
-            setLoading(true)
-            setError(null)
-            await deleteCuenta(id)
+            setError(null);
+            setLoading(true);
+            await deleteCuenta(id);
+            deleteAccount(id);
         }
         catch (error) {
-            setError(error instanceof Error ? error.message : 'Error desconocido')
+            if (error instanceof Error) setError("Error al eliminar la cuenta");
         }
         finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }, [])
+    }, [deleteAccount]);
 
-    return { remove, loading, error }
+    return { removeAccount, loading, error };
 }
