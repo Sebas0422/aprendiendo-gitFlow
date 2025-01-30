@@ -45,22 +45,6 @@ jobs:
         run: npm test
         working-directory: ./project/Mi-primer-ABMC/frontend
 
-  deploy-staging:
-    if: github.ref == 'refs/heads/develop'
-    needs: [backend, frontend]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Deploy backend to staging
-        run: npm run deploy-staging
-        working-directory: ./project/Mi-primer-ABMC/backend
-
-      - name: Deploy frontend to staging
-        run: npm run deploy-staging
-        working-directory: ./project/Mi-primer-ABMC/frontend
-
   build:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
