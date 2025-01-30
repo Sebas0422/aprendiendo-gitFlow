@@ -5,35 +5,42 @@ import { UsuarioDto } from '../dtos/usuarioDto'
 export const getUsuarios = async (req: FastifyRequest, reply: FastifyReply) => {
     try {
         const usuarios = await Usuario.find()
-        reply.send(usuarios)
+        reply.code(200).send(usuarios)
     } catch (error) {
-        console.log(error)
-        reply.code(500).send({ error: 'Error al obtener usuarios' })
+        reply.code(400).send({ error: 'Error al obtener usuarios', message: error })
     }
 };
 
-export const getUsuarioSearch = async (
-    req: FastifyRequest<{ Querystring: { search: string } }>,
-    reply: FastifyReply
-) => {
+export const getUsuarioSearch = async (req: FastifyRequest, reply: FastifyReply) => {
     try {
-        const { search } = req.query
-
-        const usuarios = await Usuario.find({
-            $or: [
-                { nombre: { $regex: search, $options: 'i' } },
-                { apellido: { $regex: search, $options: 'i' } },
-            ],
-        })
-
-        if (usuarios.length === 0) {
-            return reply.send({ error: 'No se encontraron usuarios' })
+        const { search } = req.query as { search: string }
+        if (search === undefined) {
+            return reply.status(400).send({ error: "El parámetro 'search' es requerido." })
         }
 
-        return reply.send(usuarios)
+        const regexQuery = new RegExp(search, "i")
+        const usuarios = await Usuario.aggregate([
+            {
+                $addFields: { edadStr: { $toString: "$edad" } },
+            },
+            {
+                $match: {
+                    $or: [
+                        { nombre: regexQuery },
+                        { apellido: regexQuery },
+                        { edadStr: regexQuery },
+                        { telefono: regexQuery },
+                        { correo: regexQuery },
+                    ],
+                },
+            },
+        ]);
+
+        reply.status(200).send(usuarios)
     } catch (error) {
-        console.error('Error al buscar usuario:', error)
-        return reply.code(500).send({ error: 'Error al obtener el usuario' })
+        if (error instanceof Error) {
+            reply.status(400).send({ error: "Error al buscar usuarios.", message: error.message })
+        }
     }
 };
 
@@ -50,10 +57,9 @@ export const createUsuario = async (req: FastifyRequest<{ Body: UsuarioDto }>, r
         await newUsuario.save()
         reply.status(201).send(newUsuario)
     } catch (error) {
-        reply.code(500).send({ error: 'Error al crear usuario', message: error })
+        reply.code(400).send({ error: 'Error al crear usuario', message: error })
     }
 }
-
 
 export const getUsuario = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
     try {
@@ -61,11 +67,10 @@ export const getUsuario = async (req: FastifyRequest<{ Params: { id: string } }>
         if (!usuario) {
             reply.code(404).send({ error: 'Usuario no encontrado' })
         } else {
-            reply.send(usuario)
+            reply.code(200).send(usuario)
         }
     } catch (error) {
-        console.log(error)
-        reply.code(500).send({ error: 'Error al obtener el usuario' })
+        reply.code(400).send({ error: 'Error al obtener el usuario', message: error })
     }
 };
 
@@ -79,9 +84,9 @@ export const updateUsuario = async (req: FastifyRequest<{ Body: UsuarioDto, Para
             telefono,
             correo
         })
-        reply.send({ message: 'Usuario actualizado', Usuario: req.body })
+        reply.code(201).send({ message: 'Usuario actualizado', Usuario: req.body })
     } catch (error) {
-        console.log(error)
+        reply.code(400).send({ error: 'Error al actualizar usuario', message: error })
     }
 
 }
@@ -89,8 +94,8 @@ export const updateUsuario = async (req: FastifyRequest<{ Body: UsuarioDto, Para
 export const deleteUsuario = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
     try {
         await Usuario.findByIdAndDelete(req.params.id)
-        reply.send({ message: 'Usuario eliminado' })
+        reply.code(204).send({ message: 'Usuario eliminado' })
     } catch (error) {
-        console.log(error)
+        reply.code(400).send({ error: 'Error al eliminar usuario', message: error })
     }
 }

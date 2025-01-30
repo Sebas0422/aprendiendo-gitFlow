@@ -1,7 +1,7 @@
 import { Box, Button, FormikTextInput } from '@palmetto/palmetto-components';
 import { Formik, Form, Field, FormikHelpers } from 'formik';
-import { UsuarioDTO } from '../dto/usuarioDto';
-import { useCreateUsuario } from '../hooks/useUsuarios';
+import { UsuarioDTO } from '../../types/User';
+import { useUserActions } from '../../hooks/useUsuarioActions';
 
 type FormValues = {
     nombre: string;
@@ -10,6 +10,10 @@ type FormValues = {
     email: string;
     telefono: string;
 };
+
+interface UserFormProps {
+    usuario: UsuarioDTO;
+}
 
 const validateForm = (values: FormValues): Partial<FormValues> => {
     const errors: Partial<FormValues> = {};
@@ -28,9 +32,8 @@ const validateForm = (values: FormValues): Partial<FormValues> => {
     return errors;
 };
 
-export default function UsuarioForm({ usuario }: { usuario: UsuarioDTO }) {
-    const { create } = useCreateUsuario();
-
+export default function UsuarioForm({ usuario }: UserFormProps) {
+    const { addNewUser } = useUserActions();
     const initialFormValues: FormValues = {
         nombre: usuario.nombre,
         apellido: usuario.apellido,
@@ -39,7 +42,7 @@ export default function UsuarioForm({ usuario }: { usuario: UsuarioDTO }) {
         telefono: usuario.telefono,
     };
 
-    const handleSubmit = async (
+    const handleSubmit = (
         values: FormValues,
         { setSubmitting, resetForm }: FormikHelpers<FormValues>
     ) => {
@@ -55,11 +58,10 @@ export default function UsuarioForm({ usuario }: { usuario: UsuarioDTO }) {
         };
 
         try {
-            const response = await create(newUsuario);
-            console.log('Usuario creado', response);
+            addNewUser(newUsuario);
             resetForm();
         } catch (error) {
-            console.error('Error creando usuario', error);
+            if (error instanceof Error) throw new Error(error.message);
         } finally {
             setSubmitting(false);
         }

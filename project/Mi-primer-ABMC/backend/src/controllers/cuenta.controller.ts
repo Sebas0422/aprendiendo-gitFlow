@@ -11,6 +11,35 @@ export const getCuentas = async (req: FastifyRequest, reply: FastifyReply) => {
     }
 }
 
+export const getCuentasSearch = async (req: FastifyRequest, reply: FastifyReply) => {
+    try {
+        const { search } = req.query as { search: string };
+        if (!search) {
+            return reply.code(400).send({ error: "El parámetro 'search' es requerido." });
+        }
+        const regexQuery = new RegExp(search, "i");
+        const cuentas = await Cuenta.aggregate([
+            {
+                $addFields: {
+                    montoStr: { $toString: "$monto" }
+                },
+            },
+            {
+                $match: {
+                    $or: [
+                        { cuenta: regexQuery },
+                        { nombre: regexQuery },
+                        { montoStr: regexQuery }
+                    ]
+                }
+            }
+        ]);
+        reply.send(cuentas);
+    } catch (error) {
+        reply.code(400).send({ error: 'Error al buscar cuentas', message: error });
+    }
+}
+
 export const getCuentasByUsuarioId = async (req: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) => {
     try {
         const cuentas = await Cuenta.find({ usuarioId: req.params.id }).populate('usuarioId');

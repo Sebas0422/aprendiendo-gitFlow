@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { UsuarioDTO } from '../dto/usuarioDto';
+import { UsuarioDTO } from '../types/User';
 import { getUsuarios, getUsuarioSearch, createUsuario, deleteUsuario } from '../services/user';
 
 export function useUsuarios() {
@@ -30,10 +30,6 @@ export function useUsuariosSearch({ search }: { search: string }) {
     const [, setError] = useState<string | null>(null);
     const prevSearch = useRef(search);
 
-    const removeUsuarioLocal = useCallback((usuarioId: string) => {
-        setUsuarios((prevUsuarios) => prevUsuarios.filter((usuario) => usuario.id !== usuarioId));
-    }, []);
-
     const getUsuarios = useCallback(async ({ search }: { search: string }) => {
         if (search === prevSearch.current) return
         try {
@@ -41,7 +37,6 @@ export function useUsuariosSearch({ search }: { search: string }) {
             setError(null)
             prevSearch.current = search
             const newUsuarios = await getUsuarioSearch(search)
-            console.log(newUsuarios);
             if (newUsuarios.error) {
                 setUsuarios([])
                 setError(newUsuarios.error)
@@ -60,7 +55,7 @@ export function useUsuariosSearch({ search }: { search: string }) {
 
         return [...usuarios].sort((a, b) => a.nombre.localeCompare(b.nombre))
     }, [usuarios])
-    return { usuarios: sortedUsuarios, getUsuarios, loading, removeUsuarioLocal };
+    return { usuarios: sortedUsuarios, getUsuarios, loading };
 }
 
 export function useCreateUsuario() {
