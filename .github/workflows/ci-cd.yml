@@ -4,10 +4,9 @@ on:
   push:
     branches:
       - develop
-      - main
   pull_request:
     branches:
-      - main  
+      - develop 
 
 jobs:
   backend:
@@ -47,36 +46,3 @@ jobs:
       - name: Run frontend tests
         run: npm test
         working-directory: ./project/Mi-primer-ABMC/frontend
-
-  build:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'
-
-      - name: Install dependencies
-        run: npm install
-        working-directory: ./project/Mi-primer-ABMC/frontend
-
-      - name: Build frontend
-        run: npm run build
-        working-directory: ./project/Mi-primer-ABMC/frontend
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: ./project/Mi-primer-ABMC/frontend/dist
-
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2
