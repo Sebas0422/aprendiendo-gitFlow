@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { app } from './app';
-import './database';
+import './configurations/database';
 
 async function main() {
     try {
