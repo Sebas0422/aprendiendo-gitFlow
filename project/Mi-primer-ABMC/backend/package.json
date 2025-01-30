@@ -5,9 +5,7 @@
   "scripts": {
     "tsc": "tsc",
     "dev": "ts-node-dev src/index.ts",
-    "test": "jest",
-    "deploy-staging": "node scripts/deploy-staging.js",
-    "deploy-production": "node scripts/deploy-production.js"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
