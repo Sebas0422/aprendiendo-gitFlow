@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "jest"
+    "test": "jest",
+    "deploy-staging": "node scripts/deploy-staging.js",
+    "deploy-production": "node scripts/deploy-production.js"
   },
   "dependencies": {
     "@palmetto/palmetto-components": "^2.0.0",
