@@ -5,7 +5,7 @@ import { UsuarioDto } from '../dtos/usuarioDto'
 export const getUsuarios = async (req: FastifyRequest, reply: FastifyReply) => {
     try {
         const usuarios = await Usuario.find()
-        reply.send(usuarios)
+        reply.code(200).send(usuarios)
     } catch (error) {
         reply.code(400).send({ error: 'Error al obtener usuarios', message: error })
     }
@@ -67,7 +67,7 @@ export const getUsuario = async (req: FastifyRequest<{ Params: { id: string } }>
         if (!usuario) {
             reply.code(404).send({ error: 'Usuario no encontrado' })
         } else {
-            reply.send(usuario)
+            reply.code(200).send(usuario)
         }
     } catch (error) {
         reply.code(400).send({ error: 'Error al obtener el usuario', message: error })
