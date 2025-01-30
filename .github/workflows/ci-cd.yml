@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '20'
 
       - name: Install backend dependencies
         run: npm install
@@ -35,7 +35,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '20'
 
       - name: Install frontend dependencies
         run: npm install
@@ -61,18 +61,35 @@ jobs:
         run: npm run deploy-staging
         working-directory: ./project/Mi-primer-ABMC/frontend
 
-  deploy-production:
+  build:
     if: github.ref == 'refs/heads/main'
-    needs: [backend, frontend]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Deploy backend to production
-        run: npm run deploy-production
-        working-directory: ./project/Mi-primer-ABMC/backend
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
 
-      - name: Deploy frontend to production
-        run: npm run deploy-production
+      - name: Install dependencies
+        run: npm install
         working-directory: ./project/Mi-primer-ABMC/frontend
+
+      - name: Build frontend
+        run: npm run build
+        working-directory: ./project/Mi-primer-ABMC/frontend
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./project/Mi-primer-ABMC/frontend/dist
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v2
