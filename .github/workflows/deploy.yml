@@ -16,6 +16,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      VITE_API_URL: "http://18.226.172.150:4000"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
