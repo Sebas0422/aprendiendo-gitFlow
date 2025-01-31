@@ -11,6 +11,10 @@ export const useUserActions = () => {
         dispatch(getUsersListSearch(search));
     }
 
+    const getUsers = () => {
+        dispatch(getUsersList());
+    }
+
     const setUsers = (users: UsuarioDTO[]) => {
         if (users.length === 0) {
             return;
@@ -34,7 +38,7 @@ export const useUserActions = () => {
         if (!isLoaded) {
             dispatch(getUsersList());
         }
-    }, [dispatch, isLoaded]);
+    }, [isLoaded, dispatch]);
 
-    return { getUsersListSearchs, setUsers, addNewUser, deleteExistingUser, updateExistingUser, getUsersListSearch };
+    return { getUsers, getUsersListSearchs, setUsers, addNewUser, deleteExistingUser, updateExistingUser, getUsersListSearch };
 };
