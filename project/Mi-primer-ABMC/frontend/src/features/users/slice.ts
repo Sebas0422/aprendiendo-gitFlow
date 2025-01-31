@@ -13,7 +13,7 @@ const initialState: UserState = {
     list: [],
     loading: false,
     error: null,
-    isLoaded: false
+    isLoaded: false,
 };
 
 export const getUsersList = createAsyncThunk("users/getUsersList", () => {
@@ -61,10 +61,11 @@ export const userSlice = createSlice({
             .addCase(getUsersList.fulfilled, (state, action: PayloadAction<UsuarioDTO[]>) => {
                 state.list = action.payload;
                 state.loading = false;
-                state.isLoaded = true
+                state.isLoaded = true;
             })
             .addCase(getUsersList.rejected, (state, action) => {
                 state.loading = false;
+                state.isLoaded = true;
                 state.error = action.error.message || "Failed to fetch users";
             })
             .addCase(getUsersListSearch.pending, (state) => {

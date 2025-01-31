@@ -1,15 +1,13 @@
 import { Box, Card } from "@palmetto/palmetto-components";
 import UsuarioInfo from "./UsuarioInfo";
 import CardFooter from "./CardFooter";
-import { UsuarioDTO } from "../../types/User";
 import { useUserActions } from "../../hooks/useUsuarioActions";
+import { useAppSelector } from "../../hooks/store";
 
-interface UsuarioCardProps {
-    usuarios?: UsuarioDTO[];
-}
-
-export default function UsuarioCard({ usuarios = [] }: UsuarioCardProps) {
+export default function UsuarioCard() {
     const { deleteExistingUser } = useUserActions();
+
+    const { list: usuarios } = useAppSelector((state) => state.users);
 
     const handleRemove = (id: string) => {
         deleteExistingUser(id);

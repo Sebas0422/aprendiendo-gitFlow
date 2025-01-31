@@ -1,15 +1,14 @@
-import { UsuarioDTO } from "../../types/User";
+
+import { useAppSelector } from "../../hooks/store";
 import UsuarioCard from "./UsuarioCard";
 
-interface UsuarioListProps {
-    usuarios: UsuarioDTO[]
-    loading: boolean;
-}
 
-export default function UsuarioList({ usuarios, loading }: UsuarioListProps) {
+export default function UsuarioList() {
+
+    const { loading } = useAppSelector((state) => state.users);
     if (loading) {
         return <p>Cargando...</p>;
     }
 
-    return <UsuarioCard usuarios={usuarios} />;
+    return <UsuarioCard />;
 }
