@@ -1,5 +1,5 @@
 import { UsuarioDTO } from "../types/User";
-const API_URL = `${import.meta.env.VITE_BASE_URL}/api/usuarios`;
+const API_URL = `${import.meta.env.VITE_API_URL}/api/usuarios`;
 
 export async function getUsuarios(): Promise<UsuarioDTO[]> {
     const res = await fetch(API_URL)
