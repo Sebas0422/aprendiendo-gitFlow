@@ -35,15 +35,8 @@ export async function createUsuario(usuario: UsuarioDTO) {
         },
         body: JSON.stringify(usuario)
     })
-    const data = await res.json()
-    return data.map((user: UsuarioDTO) => ({
-        id: user.id,
-        nombre: user.nombre,
-        apellido: user.apellido,
-        edad: user.edad,
-        telefono: user.telefono,
-        correo: user.correo
-    }));
+    const data: UsuarioDTO = await res.json()
+    return data;
 }
 
 export async function deleteUsuario(id: string) {
