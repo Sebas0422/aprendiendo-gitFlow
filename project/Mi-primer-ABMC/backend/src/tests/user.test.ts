@@ -1,8 +1,9 @@
 import request from "supertest";
-import { Server } from "http";
+import https, { Server } from "https";
 import { app, getTestServer } from "../app";
 import { connectTestDb, clearTestDb, closeTestDb } from "../configurations/test-db";
 
+const agente = new https.Agent({ rejectUnauthorized: false });
 let server: Server;
 
 beforeAll(async () => {
@@ -21,6 +22,7 @@ describe("User Api Test", () => {
     it("should create a new user", async () => {
         const response = await request(server)
             .post("/api/usuarios")
+            .agent(agente)
             .send({
                 nombre: "John",
                 apellido: "Doe",
@@ -40,7 +42,8 @@ describe("User Api Test", () => {
 
     it("should get a user by id", async () => {
         const response = await request(server)
-            .get(`/api/usuarios/${userId}`);
+            .get(`/api/usuarios/${userId}`)
+            .agent(agente);
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty("id");
@@ -54,6 +57,7 @@ describe("User Api Test", () => {
     it("should update a user by id", async () => {
         const response = await request(server)
             .put(`/api/usuarios/${userId}`)
+            .agent(agente)
             .send({
                 nombre: "Jane",
                 apellido: "Doe",
@@ -72,7 +76,8 @@ describe("User Api Test", () => {
 
     it("should get all users", async () => {
         const response = await request(server)
-            .get("/api/usuarios");
+            .get("/api/usuarios")
+            .agent(agente);
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveLength(1);
@@ -81,6 +86,7 @@ describe("User Api Test", () => {
     it("should search for the users", async () => {
         const response = await request(server)
             .get("/api/usuarios/search")
+            .agent(agente)
             .query({ search: "Jane" });
 
         expect(response.status).toBe(200);
@@ -89,7 +95,8 @@ describe("User Api Test", () => {
 
     it("should request the search parameter", async () => {
         const response = await request(server)
-            .get("/api/usuarios/search");
+            .get("/api/usuarios/search")
+            .agent(agente);
 
         expect(response.status).toBe(400);
         expect(response.body.error).toBe("El parámetro 'search' es requerido.");

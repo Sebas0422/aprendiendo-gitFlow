@@ -1,5 +1,5 @@
 import { UsuarioDTO } from "../types/User";
-const API_URL = `${import.meta.env.VITE_BASE_URL}/api/usuarios`;
+const API_URL = `${import.meta.env.VITE_API_URL}/api/usuarios`;
 
 export async function getUsuarios(): Promise<UsuarioDTO[]> {
     const res = await fetch(API_URL)
@@ -35,15 +35,8 @@ export async function createUsuario(usuario: UsuarioDTO) {
         },
         body: JSON.stringify(usuario)
     })
-    const data = await res.json()
-    return data.map((user: UsuarioDTO) => ({
-        id: user.id,
-        nombre: user.nombre,
-        apellido: user.apellido,
-        edad: user.edad,
-        telefono: user.telefono,
-        correo: user.correo
-    }));
+    const data: UsuarioDTO = await res.json()
+    return data;
 }
 
 export async function deleteUsuario(id: string) {

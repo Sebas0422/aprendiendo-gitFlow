@@ -3,9 +3,22 @@ import cors from '@fastify/cors';
 import formbody from '@fastify/formbody';
 import usuarioRoutes from './routes/usuario';
 import cuentaRoutes from './routes/cuenta';
-export const app = Fastify();
+import fs from 'fs';
+import path from 'path';
 
-app.register(cors);
+export const app = Fastify({
+    https: {
+        key: fs.readFileSync(path.join(__dirname, '../private-key.pem')),
+        cert: fs.readFileSync(path.join(__dirname, '../certificate.pem')),
+    }
+});
+
+app.register(cors, {
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+});
+
 app.register(formbody);
 
 app.get('/', async () => {
