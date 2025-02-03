@@ -1,6 +1,7 @@
 import { CuentaDTO } from '../types/Account';
 
 const API_URL: string = `${import.meta.env.VITE_API_URL}/api/cuentas`;
+
 export const getCuentasSearch = async (search: string) => {
     const res = await fetch(`${API_URL}/search?search=${search}`);
     const data = await res.json();
