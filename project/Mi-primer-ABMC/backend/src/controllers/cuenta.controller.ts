@@ -59,7 +59,7 @@ export const createCuenta = async (req: FastifyRequest<{ Body: CuentaDto }>, rep
             usuarioId: req.body.usuarioId
         });
         await newCuenta.save();
-        reply.code(201).send({ message: 'Cuenta creada', cuenta: newCuenta });
+        reply.code(201).send(newCuenta);
     } catch (error) {
         reply.code(500).send({ error: 'Error al crear cuenta', message: error });
     }
@@ -87,7 +87,7 @@ export const updateCuenta = async (req: FastifyRequest<{ Body: CuentaDto, Params
             monto,
             usuarioId: req.body.usuarioId
         });
-        reply.send({ message: 'Cuenta actualizada' });
+        reply.send(req.body);
     } catch (error) {
         reply.code(500).send({ error: 'Error al actualizar la cuenta', message: error });
     }
