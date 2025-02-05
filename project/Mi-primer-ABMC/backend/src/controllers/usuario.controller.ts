@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import { Usuario } from '../models/Usuario'
 import { UsuarioDto } from '../dtos/usuarioDto'
 import { emailQueue } from '../configurations/queue';
+import { QueueEventsEmail } from '../types/Queue.enum';
 
 export const getUsuarios = async (req: FastifyRequest, reply: FastifyReply) => {
     try {
@@ -57,7 +58,7 @@ export const createUsuario = async (req: FastifyRequest<{ Body: UsuarioDto }>, r
         })
         await newUsuario.save()
 
-        await emailQueue.add('sendWelcomeEmail', {
+        await emailQueue.add(QueueEventsEmail.SEND_WELCOME_EMAIL, {
             email: correo,
             message: `Hola ${nombre}, bienvenido a nuestra plataforma.`,
         });
