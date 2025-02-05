@@ -1,6 +1,7 @@
 export interface CuentaDto {
-    cuenta: string;
-    nombre: string;
-    monto: number;
-    usuarioId: string;
-  }
+  id: string;
+  cuenta: string;
+  nombre: string;
+  monto: number;
+  usuarioId: string;
+}

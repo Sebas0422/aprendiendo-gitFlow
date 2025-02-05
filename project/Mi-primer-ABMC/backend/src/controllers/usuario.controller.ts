@@ -1,6 +1,8 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { Usuario } from '../models/Usuario'
 import { UsuarioDto } from '../dtos/usuarioDto'
+import { emailQueue } from '../configurations/queue';
+import { QueueEventsEmail } from '../types/Queue.enum';
 
 export const getUsuarios = async (req: FastifyRequest, reply: FastifyReply) => {
     try {
@@ -55,6 +57,11 @@ export const createUsuario = async (req: FastifyRequest<{ Body: UsuarioDto }>, r
             correo
         })
         await newUsuario.save()
+
+        await emailQueue.add(QueueEventsEmail.SEND_WELCOME_EMAIL, {
+            email: correo,
+            message: `Hola ${nombre}, bienvenido a nuestra plataforma.`,
+        });
         reply.status(201).send(newUsuario)
     } catch (error) {
         reply.code(400).send({ error: 'Error al crear usuario', message: error })

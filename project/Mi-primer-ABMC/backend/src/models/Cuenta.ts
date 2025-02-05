@@ -9,4 +9,12 @@ const cuentaSchema = new Schema({
   timestamps: true,
 });
 
+cuentaSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id;
+    delete returnedObject._id;
+    return returnedObject;
+  }
+});
+
 export const Cuenta = model('Cuenta', cuentaSchema);
