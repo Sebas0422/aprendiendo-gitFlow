@@ -3,6 +3,8 @@ import { Usuario } from '../models/Usuario'
 import { UsuarioDto } from '../dtos/usuarioDto'
 import { emailQueue } from '../configurations/queue';
 import { QueueEventsEmail } from '../types/Queue.enum';
+import { sendWebhookAuditUser } from '../services/webHook';
+import { WebHookEvents } from '../types/WebHook.enum';
 
 export const getUsuarios = async (req: FastifyRequest, reply: FastifyReply) => {
     try {
@@ -49,19 +51,17 @@ export const getUsuarioSearch = async (req: FastifyRequest, reply: FastifyReply)
 export const createUsuario = async (req: FastifyRequest<{ Body: UsuarioDto }>, reply: FastifyReply) => {
     try {
         const { nombre, apellido, edad, telefono, correo } = req.body
-        const newUsuario = new Usuario({
-            nombre,
-            apellido,
-            edad,
-            telefono,
-            correo
-        })
+        const usuario: UsuarioDto = { nombre, apellido, edad, telefono, correo }
+        const newUsuario = new Usuario(usuario)
         await newUsuario.save()
 
         await emailQueue.add(QueueEventsEmail.SEND_WELCOME_EMAIL, {
             email: correo,
             message: `Hola ${nombre}, bienvenido a nuestra plataforma.`,
         });
+        console.log('Email enviado a la cola');
+        await sendWebhookAuditUser(usuario, WebHookEvents.CREATE_USER);
+        console.log('Webhook enviado');
         reply.status(201).send(newUsuario)
     } catch (error) {
         reply.code(400).send({ error: 'Error al crear usuario', message: error })

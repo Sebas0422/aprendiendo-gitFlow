@@ -1,5 +1,5 @@
 export interface UsuarioDto {
-  id: string,
+  id?: string,
   nombre: string;
   apellido: string;
   edad: number;
