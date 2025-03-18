@@ -59,9 +59,7 @@ export const createUsuario = async (req: FastifyRequest<{ Body: UsuarioDto }>, r
             email: correo,
             message: `Hola ${nombre}, bienvenido a nuestra plataforma.`,
         });
-        console.log('Email enviado a la cola');
         await sendWebhookAuditUser(usuario, WebHookEvents.CREATE_USER);
-        console.log('Webhook enviado');
         reply.status(201).send(newUsuario)
     } catch (error) {
         reply.code(400).send({ error: 'Error al crear usuario', message: error })
