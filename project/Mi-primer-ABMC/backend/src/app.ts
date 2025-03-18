@@ -5,6 +5,7 @@ import usuarioRoutes from './routes/usuario';
 import cuentaRoutes from './routes/cuenta';
 import fs from 'fs';
 import path from 'path';
+import webHookRoutes from './routes/webHook';
 
 export const app = Fastify({
     https: {
@@ -27,6 +28,7 @@ app.get('/', async () => {
 
 app.register(usuarioRoutes, { prefix: '/api/usuarios' });
 app.register(cuentaRoutes, { prefix: '/api/cuentas' });
+app.register(webHookRoutes, { prefix: '/api/webhook' });
 
 app.decorate('port', process.env.PORT ? Number(process.env.PORT) : 4000);
 

@@ -6,11 +6,10 @@ import { connectTestDb, clearTestDb, closeTestDb } from "../configurations/test-
 const agente = new https.Agent({ rejectUnauthorized: false });
 let server: Server;
 
-// Mocas el método add de emailQueue
 jest.mock('../configurations/queue', () => {
     return {
         emailQueue: {
-            add: jest.fn().mockResolvedValue(undefined), // Uso de mockResolvedValue
+            add: jest.fn().mockResolvedValue(undefined),
         },
     };
 });
