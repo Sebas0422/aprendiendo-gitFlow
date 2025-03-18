@@ -2,8 +2,10 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { UsuarioDto } from "../dtos/usuarioDto";
 import { WebHookEvents } from "../types/WebHook.enum";
 
-export const sendWebhookAuditUser = async (req: FastifyRequest<{ Body: { data: UsuarioDto, event: WebHookEvents } }>, reply: FastifyReply) => {
-    console.log("LLego al webhook controller");
+export const sendWebhookAuditUser = async (
+    req: FastifyRequest<{ Body: { data: UsuarioDto, event: WebHookEvents } }>,
+    reply: FastifyReply
+) => {
     try {
         const { data, event } = req.body;
         if (!data || !event) {
